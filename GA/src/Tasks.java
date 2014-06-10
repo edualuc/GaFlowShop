@@ -8,6 +8,8 @@ import org.jenetics.Optimize;
 import org.jenetics.PermutationChromosome;
 import org.jenetics.util.Factory;
 import org.jenetics.util.Function;
+import org.jenetics.PartiallyMatchedCrossover;
+import org.jenetics.SwapMutator;
 
 
 public class Tasks {
@@ -37,11 +39,9 @@ public class Tasks {
 		/*
 		 *  Definir Operadores
 		 */
-			// Mutação
-		
-			// Crossover
-		
-			// Roleta
+		ga.setSelectors(new RouletteWheelSelector<EnumGene<Integer>>());
+		ga.setAlterers(new PartiallyMatchedCrossover<Integer>(0.1),
+				new SwapMutator<EnumGene<Integer>>(0.01)); 
 		
 		/*
 		 *  Rodar Ambiente
