@@ -5,20 +5,25 @@ import org.jenetics.EnumGene;
 import org.jenetics.GeneticAlgorithm;
 import org.jenetics.Genotype;
 import org.jenetics.Optimize;
+import org.jenetics.PartiallyMatchedCrossover;
 import org.jenetics.PermutationChromosome;
+import org.jenetics.RouletteWheelSelector;
+import org.jenetics.SwapMutator;
 import org.jenetics.util.Factory;
 import org.jenetics.util.Function;
-import org.jenetics.PartiallyMatchedCrossover;
-import org.jenetics.SwapMutator;
 
 
 public class Tasks {
-
+	private static final int sizePupulation = 50;
+	private static final double probalidadeCrossover = 0.2;
+	private static final double probalidadeMutacao = 0.01;
+	private static final int quantidadeGeracoes = 990;
+	
 	private static int[][] matrizMaqsTarefas;
 	private static int[] tempoTotalOps;
 	private static int maquinas;
 	private static int tarefas;
-
+	
 	public static void main(String[] args) {
 		
 		/*
@@ -37,21 +42,36 @@ public class Tasks {
 				new GeneticAlgorithm<>(genotipo, fitness, Optimize.MINIMUM);
 		
 		/*
-		 *  Definir Operadores
+		 * Escolha dos melhores
 		 */
-		ga.setSelectors(new RouletteWheelSelector<EnumGene<Integer>>());
-		ga.setAlterers(new PartiallyMatchedCrossover<Integer>(0.1),
-				new SwapMutator<EnumGene<Integer>>(0.01)); 
+		ga.setSelectors(new RouletteWheelSelector<EnumGene<Integer>, Integer>() );
+		
+		ga.setAlterers( 
+				new PartiallyMatchedCrossover<Integer>(probalidadeCrossover),
+				new SwapMutator<EnumGene<Integer>>(probalidadeMutacao)
+		); 
 		
 		/*
 		 *  Rodar Ambiente
 		 */
 		ga.setup();
-        ga.evolve(700);
+		ga.setPopulationSize(sizePupulation);
+		//ga.setMaximalPhenotypeAge(age);
+		//ga.setSurvivorSelector(selector);
+		
+		for(int i = 0; i < quantidadeGeracoes; i = i + quantidadeGeracoes/10) {
+			ga.evolve(quantidadeGeracoes/10);
+			//System.out.println(ga.getStatistics());
+			System.out.println("#" + ga.getStatistics().getGeneration() + 
+					". Melhor: " + ga.getStatistics().getBestFitness() + 
+					". Pior: " + ga.getStatistics().getWorstFitness());
+		}
+		
 		
 		/*
 		 *  Informar resultados
 		 */
+		System.out.println(ga.getTimeStatistics());
         System.out.println(ga.getBestStatistics());
         System.out.println(ga.getBestPhenotype());
 		
@@ -97,13 +117,13 @@ class Fitness implements Function<Genotype<EnumGene<Integer>>, Integer>
     public Integer apply(Genotype<EnumGene<Integer>> genotype) {
         
     	Chromosome<EnumGene<Integer>> cromossomo = genotype.getChromosome();
-    	int alelosDoGene[] = new int[100];
+    	int alelosDoGene[] = new int[cromossomo.length()];
     	
     	for (int i = 0, n = cromossomo.length(); i < n; ++i) {
             alelosDoGene[i] = cromossomo.getGene(i).getAllele();
-            System.out.print(cromossomo.getGene(i).getAllele() + " ");
+            //System.out.print(cromossomo.getGene(i).getAllele() + " ");
         }
-    	System.out.println();
+    	//System.out.println();
     	
         return calculaMakespan(alelosDoGene);
     }
