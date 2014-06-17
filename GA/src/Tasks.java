@@ -59,6 +59,7 @@ public class Tasks {
 		//ga.setMaximalPhenotypeAge(age);
 		//ga.setSurvivorSelector(selector);
 		
+		/*
 		for(int i = 0; i < quantidadeGeracoes; i = i + quantidadeGeracoes/10) {
 			ga.evolve(quantidadeGeracoes/10);
 			//System.out.println(ga.getStatistics());
@@ -66,13 +67,14 @@ public class Tasks {
 					". Melhor: " + ga.getStatistics().getBestFitness() + 
 					". Pior: " + ga.getStatistics().getWorstFitness());
 		}
-		
+		*/
+		ga.evolve(quantidadeGeracoes);
 		
 		/*
 		 *  Informar resultados
 		 */
-		System.out.println(ga.getTimeStatistics());
-        System.out.println(ga.getBestStatistics());
+		//System.out.println(ga.getTimeStatistics());
+        //System.out.println(ga.getBestStatistics());
         System.out.println(ga.getBestPhenotype());
 		
 	}
@@ -133,21 +135,21 @@ class Fitness implements Function<Genotype<EnumGene<Integer>>, Integer>
 
 		for (int i = 0; i < shifts.length; i++) {
 			for (int j = 0; j < shifts[0].length; j++) {
-				if (i == 0) { // se é a primeira operação
-					if (j == 0) { // se é a primeira tarefa
+				if (i == 0) { // se ï¿½ a primeira operaï¿½ï¿½o
+					if (j == 0) { // se ï¿½ a primeira tarefa
 						shifts[0][0] = matrizMaqsOps[solucao[i]][0];
 
-					} else {// se são as demais tarefas
+					} else {// se sï¿½o as demais tarefas
 						shifts[i][j] = shifts[i][j - 1]
 								+ matrizMaqsOps[solucao[i]][j];
 
 					}
-				} else { // se são as demais operações (>0)
-					if (j == 0) { // se é a primeira tarefa
+				} else { // se sï¿½o as demais operaï¿½ï¿½es (>0)
+					if (j == 0) { // se ï¿½ a primeira tarefa
 						shifts[i][0] = shifts[i - 1][0]
 								+ matrizMaqsOps[solucao[i]][0];
 
-					} else { // se são as demais tarefas
+					} else { // se sï¿½o as demais tarefas
 						shifts[i][j] = Math.max(shifts[i - 1][j],
 								shifts[i][j - 1])
 								+ matrizMaqsOps[solucao[i]][j];
